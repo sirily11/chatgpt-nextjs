@@ -1,12 +1,4 @@
-import { z } from 'zod';
-
-export const KvStoreTypeSchema = z.enum([
-  'registration',
-  'authentication',
-  'authenticated'
-]);
-
-export type KvStoreType = z.infer<typeof KvStoreTypeSchema>;
+export type KvStoreType = 'registration' | 'authentication' | 'authenticated';
 
 /**
  * Get KV key for a given type and user ID

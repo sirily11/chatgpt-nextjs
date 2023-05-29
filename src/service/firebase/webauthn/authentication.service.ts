@@ -1,12 +1,7 @@
-import { z } from 'zod';
 import { KvStoreType } from './kv.utils';
 import axios from 'axios';
 import { client } from '@passwordless-id/webauthn';
 import { AuthenticationEncoded } from '@passwordless-id/webauthn/dist/esm/types';
-
-const ChallengeSchema = z.object({
-  challenge: z.string()
-});
 
 export class PasswordlessAuthenticationService {
   static async getChallenge(
@@ -16,7 +11,7 @@ export class PasswordlessAuthenticationService {
     const response = await axios.get(
       `/api/challenge?type=${type}&userId=${userId}`
     );
-    const data = ChallengeSchema.parse(response.data);
+    const data = response.data;
     return data.challenge;
   }
 
@@ -37,7 +32,7 @@ export class PasswordlessAuthenticationService {
 
   static async getSigninId(username: string): Promise<string> {
     const data = await axios.get(`/api/auth/signin?username=${username}`);
-    return z.string().parse(data.data.id);
+    return data.data.id;
   }
 
   static async prepareSignin(username: string) {
