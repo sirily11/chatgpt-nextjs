@@ -3,21 +3,9 @@ import { getKey } from '@/service/firebase/webauthn/kv.utils';
 import { server } from '@passwordless-id/webauthn';
 import { kv } from '@vercel/kv';
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
-
-const RequestSchema = z.object({
-  username: z.string(),
-  credential: z.object({
-    id: z.string(),
-    publicKey: z.string(),
-    algorithm: z.enum(['RS256', 'ES256'])
-  }),
-  authenticatorData: z.string(),
-  clientData: z.string()
-});
 
 export async function POST(request: Request) {
-  const registration = RequestSchema.parse(await request.json());
+  const registration = await request.json();
   const key = getKey('registration', registration.username);
   if (!kv.exists(key)) {
     return NextResponse.json(
@@ -26,11 +14,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const session = z
-    .object({
-      challenge: z.string()
-    })
-    .parse(await kv.get(key));
+  const session = (await kv.get(key)) as any;
   await server.verifyRegistration(registration, {
     challenge: session.challenge,
     origin: () => true
@@ -57,8 +41,7 @@ export async function POST(request: Request) {
   // create a user in the firebase auth
   await admin.auth().createUser({
     uid: registration.credential.id,
-    displayName: registration.username,
-    
+    displayName: registration.username
   });
   return NextResponse.json({ id: registration.username });
 }
