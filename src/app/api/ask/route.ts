@@ -4,15 +4,16 @@ import { z } from 'zod';
 
 const RequestSchema = z.object({
   prompt: z.string(),
-  parentMessageId: z.string()
+  parentMessageId: z.any()
 });
 
 export async function POST(request: Request) {
-  const { prompt, parentMessageId } = RequestSchema.parse(await request.json());
+  const data = await request.json();
+  const { prompt, parentMessageId } = RequestSchema.parse(data);
 
   const result = await chatgptQuery(prompt, parentMessageId);
 
   return NextResponse.json({
-    hello: 'world'
+    result
   });
 }

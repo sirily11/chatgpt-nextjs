@@ -24,6 +24,8 @@ type MessageProps = {
 };
 
 function Message({ message }: MessageProps) {
+  console.log(message);
+
   const isChatGPT = message.user.name === 'ChatGPT';
 
   const { data: session } = useSession();
@@ -108,7 +110,7 @@ function Message({ message }: MessageProps) {
           <div className="flex justify-between">
             <div
               className="mt-2 flex justify-center gap-3 self-end text-gray-400 md:gap-4 
-              lg:absolute lg:top-0 lg:right-0 lg:mt-0 lg:translate-x-full lg:gap-1 lg:self-center lg:pl-2"
+              lg:absolute lg:right-0 lg:top-0 lg:mt-0 lg:translate-x-full lg:gap-1 lg:self-center lg:pl-2"
             >
               {/* 
               Due to the previous version not adding the field 'prompt', 

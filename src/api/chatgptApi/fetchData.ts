@@ -24,7 +24,7 @@ const fetchAskQuestion = async ({
   isGenerate,
   translate
 }: fetchAskQuestionValue) => {
-  fetch('/api/askQuestion', {
+  fetch('/api/ask', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
