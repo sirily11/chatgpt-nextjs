@@ -20,56 +20,55 @@ export const authOptions: NextAuthOptions = {
     signIn: '/signin'
   },
   providers: [
-    // CredentialsProvider({
-    //   name: 'Credentials',
-    //   credentials: {
-    //     username: { label: 'Username', type: 'text' },
-    //     credentialId: {
-    //       label: 'credentialId',
-    //       type: 'text'
-    //     },
-    //     authenticatorData: { label: 'authenticatorData', type: 'text' },
-    //     clientData: { label: 'authenticatorData', type: 'text' },
-    //     signature: { label: 'authenticatorData', type: 'text' }
-    //   },
-    //   async authorize(credentials) {
-    //     if (!credentials) {
-    //       throw new Error('No credentials');
-    //     }
-    //     const { username, ...credentialData } = credentials;
-    //     const key = getKey('authentication', username);
-    //     if (!(await kv.exists(key))) {
-    //       throw new Error('No registration session found');
-    //     }
-    //     const session = await kv.get<any>(key);
-    //     const admin = getAdmin();
-    //     const user = await admin
-    //       .firestore()
-    //       .collection('users')
-    //       .doc(username)
-    //       .get();
-    //     if (!user.exists) {
-    //       throw new Error('User does not exist');
-    //     }
-    //     const userData = user.data();
-    //     // const credential = CredentialSchema.parse(userData?.credential);
-    //     const credential = userData?.credential;
-    //     const result = await server.verifyAuthentication(
-    //       credentialData,
-    //       credential,
-    //       {
-    //         origin: () => true,
-    //         challenge: session.challenge,
-    //         userVerified: false,
-    //         counter: -1
-    //       }
-    //     );
-    //     return {
-    //       id: result.credentialId,
-    //       name: username
-    //     };
-    //   }
-    // })
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        credentialId: {
+          label: 'credentialId',
+          type: 'text'
+        },
+        authenticatorData: { label: 'authenticatorData', type: 'text' },
+        clientData: { label: 'authenticatorData', type: 'text' },
+        signature: { label: 'authenticatorData', type: 'text' }
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          throw new Error('No credentials');
+        }
+        const { username, ...credentialData } = credentials;
+        const key = getKey('authentication', username);
+        if (!(await kv.exists(key))) {
+          throw new Error('No registration session found');
+        }
+        const session = await kv.get<any>(key);
+        const admin = getAdmin();
+        const user = await admin
+          .firestore()
+          .collection('users')
+          .doc(username)
+          .get();
+        if (!user.exists) {
+          throw new Error('User does not exist');
+        }
+        const userData = user.data();
+        const credential = CredentialSchema.parse(userData?.credential);
+        const result = await server.verifyAuthentication(
+          credentialData,
+          credential,
+          {
+            origin: () => true,
+            challenge: session.challenge,
+            userVerified: false,
+            counter: -1
+          }
+        );
+        return {
+          id: result.credentialId,
+          name: username
+        };
+      }
+    })
   ],
   callbacks: {
     // async jwt({ token, user, account, profile, isNewUser }: any) {
