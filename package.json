@@ -20,7 +20,7 @@
     "@vercel/analytics": "^0.1.11",
     "@vercel/kv": "^0.2.1",
     "axios": "^1.4.0",
-    "chatgpt": "^5.0.0",
+    "chatgpt": "git://github.com/masterkain/chatgpt-api.git#f39279cef96a41b1f5fd5e3f93494ad8a4f81403",
     "crypto-js": "^4.1.1",
     "deepl-node": "^1.8.0",
     "dlv": "^1.1.3",
